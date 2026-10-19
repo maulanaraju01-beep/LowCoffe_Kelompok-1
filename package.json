@@ -1,0 +1,17 @@
+{
+  "name": "low-coffe-web",
+  "version": "1.0.0",
+  "description": "Low Coffe - Aplikasi Pemesanan Kopi dan Makanan dengan Dashboard Admin (Kelompok 5)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node data/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0"
+  }
+}

@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Low Coffe - Premium Coffee For You</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js for Reports -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/customer.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+</head>
+<body class="mode-phone">
+
+  <!-- Top Global Bar (For Presentation, Testing & Responsive Switching) -->
+  <header class="global-topbar">
+    <div class="global-container">
+      <div class="brand-badge" onclick="navigateTo('/menu')">
+        <img src="/assets/logo.png" alt="Low Coffe" class="topbar-logo" onerror="this.style.display='none'">
+        <div class="brand-text">
+          <span class="brand-title">Low Coffe</span>
+          <span class="brand-sub">Kelompok 5 • Monolitik Web</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <!-- Quick Screen Navigation Jump -->
+        <div class="quick-nav-dropdown">
+          <button class="btn-topbar dropdown-toggle" id="btnQuickNav">
+            <i class="fa-solid fa-compass"></i>
+            <span class="btn-text">Lompat Halaman</span>
+            <i class="fa-solid fa-chevron-down caret"></i>
+          </button>
+          <div class="dropdown-menu" id="quickNavMenu">
+            <div class="dropdown-header">Alur Pelanggan</div>
+            <a href="javascript:void(0)" onclick="navigateTo('/onboarding')"><i class="fa-solid fa-mobile-screen"></i> 1. Onboarding Walkthrough</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/login')"><i class="fa-solid fa-right-to-bracket"></i> 2. Masuk & Daftar (Auth)</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/menu')"><i class="fa-solid fa-mug-hot"></i> 3. Katalog Menu & Kustomisasi</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/favorit')"><i class="fa-solid fa-heart"></i> 4. Menu Favorit</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/keranjang')"><i class="fa-solid fa-bag-shopping"></i> 5. Keranjang & Checkout</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/akun')"><i class="fa-solid fa-user"></i> 6. Akun Pelanggan & Pesanan</a>
+            
+            <div class="dropdown-header">Alur Espresso Admin</div>
+            <a href="javascript:void(0)" onclick="navigateTo('/admin')"><i class="fa-solid fa-chart-pie"></i> 7. Dashboard Overview</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/admin/orders')"><i class="fa-solid fa-receipt"></i> 8. Manajemen Pesanan</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/admin/menu')"><i class="fa-solid fa-boxes-stacked"></i> 9. Kelola Produk & Stok</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/admin/reports')"><i class="fa-solid fa-chart-line"></i> 10. Laporan Penjualan (Sales)</a>
+            <a href="javascript:void(0)" onclick="navigateTo('/admin/settings')"><i class="fa-solid fa-sliders"></i> 11. Pengaturan Toko & Tim</a>
+          </div>
+        </div>
+
+        <!-- Role Quick Switcher -->
+        <div class="role-pill" id="rolePill">
+          <button class="role-btn active" id="btnRoleCustomer" onclick="switchRole('customer')">
+            <i class="fa-solid fa-user"></i> Pelanggan
+          </button>
+          <button class="role-btn" id="btnRoleAdmin" onclick="switchRole('admin')">
+            <i class="fa-solid fa-shield-halved"></i> Admin
+          </button>
+        </div>
+
+        <!-- Viewport Mode (iPhone Frame vs Full Web) -->
+        <button class="btn-topbar view-toggle-btn" id="btnToggleView" title="Ganti Tampilan iPhone / Full Web">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <span class="btn-text">Mode HP</span>
+        </button>
+
+        <!-- Presentation Info Button -->
+        <button class="btn-topbar info-btn" onclick="openTeamModal()" title="Info Tim Kelompok 5">
+          <i class="fa-solid fa-users"></i>
+          <span class="btn-text">Kelompok 5</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Stage / Container -->
+  <main class="app-viewport">
+    
+    <!-- Phone Mockup Frame (Active when body.mode-phone) -->
+    <div class="phone-frame-wrapper" id="phoneWrapper">
+      <div class="phone-speaker"></div>
+      <div class="phone-camera"></div>
+      
+      <!-- Phone Screen Viewport -->
+      <div class="phone-screen" id="appRoot">
+
+        <!-- ============================================== -->
+        <!-- VIEW 1: ONBOARDING WALKTHROUGH (SCREENS 1, 2, 3)-->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-onboarding">
+          <div class="onboarding-container">
+            <!-- Top Controls -->
+            <div class="onboarding-topbar">
+              <button class="onboard-back-btn" id="onboardPrevBtn" onclick="onboardPrev()">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <button class="onboard-skip-btn" onclick="navigateTo('/login')">Lewati</button>
+            </div>
+
+            <!-- Slide Content -->
+            <div class="onboard-slider" id="onboardSlider">
+              <!-- Slide 1 -->
+              <div class="onboard-slide active" data-step="1">
+                <div class="onboard-visual">
+                  <div class="visual-art">
+                    <img src="/assets/icons/image-2-2.png" alt="Kopi Sesuai Selera" class="onboard-img" onerror="this.src='/assets/images/latte.jpg'">
+                    <div class="callout callout-1">1 Shot</div>
+                    <div class="callout callout-2">Susu Segar</div>
+                    <div class="callout callout-3">Gula Aren</div>
+                  </div>
+                </div>
+                <div class="onboard-card">
+                  <h2 class="onboard-title">pesan kopi yang kamu sukai !</h2>
+                  <p class="onboard-desc">Nikmati racikan kopi terbaik sesuai seleramu dengan biji kopi pilihan langsung dari smartphone tanpa perlu antre di kasir.</p>
+                  <div class="onboard-footer">
+                    <div class="step-dots">
+                      <span class="dot active"></span>
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                    </div>
+                    <button class="onboard-next-circle" onclick="onboardNext()">
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 2 -->
+              <div class="onboard-slide" data-step="2">
+                <div class="onboard-visual">
+                  <div class="visual-art">
+                    <img src="/assets/icons/image-4-1.png" alt="Pilih Biji Kopi" class="onboard-img" onerror="this.src='/assets/images/sanger.jpg'">
+                    <div class="callout callout-1">Fresh Milk</div>
+                    <div class="callout callout-2">Oat Milk</div>
+                    <div class="callout callout-3">Arabika Gayo</div>
+                  </div>
+                </div>
+                <div class="onboard-card">
+                  <h2 class="onboard-title">Di mana kamu bisa pilih biji kopi yang kamu sukai</h2>
+                  <p class="onboard-desc">Bebas sesuaikan pesanan kopimu mulai dari jenis biji kopi, varian susu, ekstra espresso shot, hingga suhu dingin atau hangat.</p>
+                  <div class="onboard-footer">
+                    <div class="step-dots">
+                      <span class="dot"></span>
+                      <span class="dot active"></span>
+                      <span class="dot"></span>
+                    </div>
+                    <button class="onboard-next-circle" onclick="onboardNext()">
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 3 -->
+              <div class="onboard-slide" data-step="3">
+                <div class="onboard-visual">
+                  <div class="visual-art">
+                    <img src="/assets/icons/image-2-3.png" alt="Pesan Makanan" class="onboard-img" onerror="this.src='/assets/images/croissant.jpg'">
+                    <div class="callout callout-1">French Fries</div>
+                    <div class="callout callout-2">Spaghetti</div>
+                    <div class="callout callout-3">Croissant</div>
+                  </div>
+                </div>
+                <div class="onboard-card">
+                  <h2 class="onboard-title">Laper? kamu bisa pesan makanan juga</h2>
+                  <p class="onboard-desc">Satu aplikasi dan satu keranjang praktis untuk memesan secangkir kopi favorit sekaligus hidangan lezat peneman harimu.</p>
+                  <div class="onboard-footer">
+                    <div class="step-dots">
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                      <span class="dot active"></span>
+                    </div>
+                    <button class="onboard-next-circle finish" onclick="navigateTo('/login')">
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 2: AUTHENTICATION (SCREENS 4 & 5) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-login">
+          <div class="auth-header">
+            <div class="auth-logo-wrap">
+              <img src="/assets/logo.png" alt="Logo" class="auth-logo" onerror="this.src='/assets/icons/image-2-2.png'">
+            </div>
+            <h1 class="auth-brand-name">Low Coffe</h1>
+            <p class="auth-tagline">premium coffee for you</p>
+          </div>
+
+          <div class="auth-card">
+            <!-- Tabs Masuk / Daftar -->
+            <div class="auth-tabs">
+              <button class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">Masuk</button>
+              <button class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">Daftar</button>
+            </div>
+
+            <!-- Form Masuk -->
+            <form id="formLogin" class="auth-form" onsubmit="handleLoginSubmit(event)">
+              <div class="input-group">
+                <label>Email atau Nomor Telepon</label>
+                <div class="input-field">
+                  <i class="fa-regular fa-envelope"></i>
+                  <input type="text" id="loginEmail" placeholder="danesyya.q@email.com" value="danesyya.q@email.com" required>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>Kata Sandi</label>
+                <div class="input-field">
+                  <i class="fa-solid fa-lock"></i>
+                  <input type="password" id="loginPassword" placeholder="••••••••" value="user123" required>
+                  <button type="button" class="eye-toggle" onclick="togglePasswordVisibility('loginPassword', this)">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="auth-extra">
+                <label class="remember-me">
+                  <input type="checkbox" checked> Ingat saya
+                </label>
+                <a href="javascript:void(0)" class="forgot-link" onclick="showToast('Fitur reset kata sandi dikirim ke email terdaftar')">Lupa Kata Sandi?</a>
+              </div>
+
+              <button type="submit" class="btn-primary auth-submit">Masuk</button>
+            </form>
+
+            <!-- Form Daftar -->
+            <form id="formRegister" class="auth-form hidden" onsubmit="handleRegisterSubmit(event)">
+              <div class="input-group">
+                <label>Nama Lengkap</label>
+                <div class="input-field">
+                  <i class="fa-regular fa-user"></i>
+                  <input type="text" id="regName" placeholder="Nama Anda" required>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>Alamat Email</label>
+                <div class="input-field">
+                  <i class="fa-regular fa-envelope"></i>
+                  <input type="email" id="regEmail" placeholder="nama@email.com" required>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>Nomor WhatsApp / HP</label>
+                <div class="input-field">
+                  <i class="fa-solid fa-phone"></i>
+                  <input type="tel" id="regPhone" placeholder="0812-xxxx-xxxx" required>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>Kata Sandi</label>
+                <div class="input-field">
+                  <i class="fa-solid fa-lock"></i>
+                  <input type="password" id="regPassword" placeholder="Minimal 6 karakter" required>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary auth-submit">Daftar Akun Baru</button>
+            </form>
+
+            <!-- Social Login Google -->
+            <div class="social-divider">
+              <span>atau masuk dengan</span>
+            </div>
+
+            <button type="button" class="btn-google" onclick="handleGoogleLogin()">
+              <svg viewBox="0 0 24 24" class="google-svg"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+              <span>Google Account</span>
+            </button>
+
+            <!-- Quick Demo Credentials Hint -->
+            <div class="auth-demo-hint">
+              <p><strong>Demo Cepat:</strong> Masuk sebagai Pelanggan (<code>danesyya.q@email.com</code>) atau <a href="javascript:void(0)" onclick="quickLoginAdmin()">Espresso Admin</a></p>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 3: CUSTOMER MENU (SCREENS 11, 12, 13, 14) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-customer-menu">
+          <!-- Header Pelanggan -->
+          <div class="cust-header">
+            <div class="cust-greeting">
+              <div class="user-info">
+                <span class="hello-text">Halo, Selamat Menikmati ☕</span>
+                <h3 class="user-name" id="menuGreetingName">Danesyya Qamrut</h3>
+              </div>
+              <div class="header-avatar" onclick="navigateTo('/akun')">
+                <img src="/assets/images/avatar-customer.jpg" id="headerAvatarImg" alt="User">
+              </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="menuSearchInput" placeholder="Cari kopi, latte, makanan lezat..." oninput="handleMenuSearch(this.value)">
+              <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" style="display:none">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <!-- Category Pills Bar -->
+            <div class="category-pills" id="categoryPills">
+              <button class="cat-pill active" data-cat="all" onclick="selectCategory('all', this)">
+                <i class="fa-solid fa-mug-hot"></i> Semua
+              </button>
+              <button class="cat-pill" data-cat="kopi" onclick="selectCategory('kopi', this)">
+                <i class="fa-solid fa-fire"></i> Kopi
+              </button>
+              <button class="cat-pill" data-cat="non-kopi" onclick="selectCategory('non-kopi', this)">
+                <i class="fa-solid fa-glass-water"></i> Non-Kopi
+              </button>
+              <button class="cat-pill" data-cat="makanan" onclick="selectCategory('makanan', this)">
+                <i class="fa-solid fa-utensils"></i> Makanan
+              </button>
+              <button class="cat-pill" data-cat="snack" onclick="selectCategory('snack', this)">
+                <i class="fa-solid fa-cookie"></i> Snack
+              </button>
+            </div>
+          </div>
+
+          <!-- Promo Banner -->
+          <div class="promo-banner">
+            <div class="promo-content">
+              <span class="promo-badge">PROMO SPESIAL</span>
+              <h4>Low Coffe Premium</h4>
+              <p>Diskon racikan kopi favoritmu setiap hari.</p>
+            </div>
+            <div class="promo-icon">
+              <i class="fa-solid fa-mug-saucer"></i>
+            </div>
+          </div>
+
+          <!-- Section Title -->
+          <div class="section-heading">
+            <h3 id="currentCategoryTitle">Daftar Menu Kopi & Makanan</h3>
+            <span class="item-count" id="menuCountBadge">18 Menu</span>
+          </div>
+
+          <!-- Menu Grid / List -->
+          <div class="menu-list" id="menuListContainer">
+            <!-- Rendered dynamically by customer.js -->
+            <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Memuat menu pilihan...</div>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 4: CUSTOMER FAVORITES (SCREEN 15) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-customer-favorites">
+          <div class="cust-page-header">
+            <button class="back-circle-btn" onclick="navigateTo('/menu')">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <h2>Menu Favorit Saya</h2>
+            <div class="header-placeholder"></div>
+          </div>
+
+          <div class="favorites-intro">
+            <p>Daftar racikan kopi dan makanan yang paling sering kamu sukai. Pesan kembali hanya dengan satu klik!</p>
+          </div>
+
+          <div class="menu-list" id="favoritesListContainer">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 5: CUSTOMER CART & CHECKOUT (SCREEN 16) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-customer-cart">
+          <div class="cust-page-header">
+            <button class="back-circle-btn" onclick="navigateTo('/menu')">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <h2>Keranjang Pesanan</h2>
+            <button class="text-btn text-danger" onclick="clearCart()">Kosongkan</button>
+          </div>
+
+          <!-- Cart Items Container -->
+          <div class="cart-items-container" id="cartItemsContainer">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Order Preferences Card -->
+          <div class="order-prefs-card" id="orderPrefsCard">
+            <h4 class="card-section-title"><i class="fa-solid fa-utensils"></i> Opsi Makan</h4>
+            
+            <div class="order-type-switch">
+              <label class="type-opt">
+                <input type="radio" name="orderType" value="Dine-in" checked onchange="handleOrderTypeChange(this.value)">
+                <span class="type-box"><i class="fa-solid fa-chair"></i> Makan di Tempat (Dine-in)</span>
+              </label>
+              <label class="type-opt">
+                <input type="radio" name="orderType" value="Takeaway" onchange="handleOrderTypeChange(this.value)">
+                <span class="type-box"><i class="fa-solid fa-bag-shopping"></i> Bawa Pulang (Takeaway)</span>
+              </label>
+            </div>
+
+            <div class="table-input-wrap" id="tableSelectWrap">
+              <label>Pilih Nomor Meja:</label>
+              <select id="cartTableNumber" class="custom-select">
+                <option value="01">Meja 01 (Lantai 1 - Indoor AC)</option>
+                <option value="02">Meja 02 (Lantai 1 - Indoor AC)</option>
+                <option value="03">Meja 03 (Lantai 1 - Barista Area)</option>
+                <option value="05" selected>Meja 05 (Lantai 1 - Window View)</option>
+                <option value="07">Meja 07 (Lantai 2 - Outdoor Balkon)</option>
+                <option value="10">Meja 10 (Lantai 2 - Sofa Santai)</option>
+                <option value="12">Meja 12 (Lantai 2 - Working Space)</option>
+              </select>
+            </div>
+
+            <h4 class="card-section-title mt-3"><i class="fa-solid fa-wallet"></i> Metode Pembayaran</h4>
+            <div class="payment-options">
+              <label class="pay-opt">
+                <input type="radio" name="paymentMethod" value="QRIS" checked>
+                <span class="pay-box"><i class="fa-solid fa-qrcode"></i> QRIS (Semua E-Wallet)</span>
+              </label>
+              <label class="pay-opt">
+                <input type="radio" name="paymentMethod" value="Tunai di Kasir">
+                <span class="pay-box"><i class="fa-solid fa-money-bill-wave"></i> Tunai di Kasir</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Bill Summary Card -->
+          <div class="bill-summary-card" id="billSummaryCard">
+            <h4 class="card-section-title"><i class="fa-solid fa-receipt"></i> Rincian Pembayaran</h4>
+            <div class="bill-row">
+              <span>Subtotal Item</span>
+              <span id="cartSubtotalText">Rp 0</span>
+            </div>
+            <div class="bill-row">
+              <span>Biaya Layanan & Pajak</span>
+              <span id="cartTaxText">Rp 2.000</span>
+            </div>
+            <div class="bill-divider"></div>
+            <div class="bill-row total-row">
+              <span>Total Pembayaran</span>
+              <span class="total-price" id="cartTotalText">Rp 0</span>
+            </div>
+
+            <button class="btn-primary checkout-btn" id="btnCheckout" onclick="submitOrderCheckout()">
+              <i class="fa-solid fa-check-circle"></i> Pesan Sekarang
+            </button>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 6: CUSTOMER PROFILE & ORDERS (SCREEN 17) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-customer-profile">
+          <div class="cust-page-header">
+            <button class="back-circle-btn" onclick="navigateTo('/menu')">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <h2>Akun Saya</h2>
+            <button class="icon-header-btn" onclick="openProfileEditModal()">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+          </div>
+
+          <!-- Profile Card -->
+          <div class="profile-card">
+            <div class="profile-avatar-wrap">
+              <img src="/assets/images/avatar-customer.jpg" id="profileAvatarImg" alt="Profile">
+              <span class="member-badge"><i class="fa-solid fa-check"></i></span>
+            </div>
+            <h3 class="profile-name" id="profileNameText">Danesyya Qamrut</h3>
+            <p class="profile-email" id="profileEmailText">danesyya.q@email.com</p>
+            <p class="profile-phone" id="profilePhoneText"><i class="fa-solid fa-phone"></i> 0812-3456-7890</p>
+          </div>
+
+          <!-- Orders History Tabs -->
+          <div class="account-sections">
+            <div class="history-header">
+              <h4><i class="fa-solid fa-clock-rotate-left"></i> Pesanan Saya</h4>
+              <button class="text-btn" onclick="loadCustomerOrders()">Segarkan</button>
+            </div>
+
+            <!-- Customer Orders List -->
+            <div class="customer-orders-list" id="customerOrdersList">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Settings Links List -->
+            <div class="menu-action-list">
+              <div class="action-item" onclick="openProfileEditModal()">
+                <div class="action-icon"><i class="fa-regular fa-user"></i></div>
+                <div class="action-label">Edit Profil Akun</div>
+                <i class="fa-solid fa-chevron-right action-arrow"></i>
+              </div>
+              <div class="action-item" onclick="navigateTo('/favorit')">
+                <div class="action-icon"><i class="fa-regular fa-heart"></i></div>
+                <div class="action-label">Menu Paling Disukai</div>
+                <i class="fa-solid fa-chevron-right action-arrow"></i>
+              </div>
+              <div class="action-item" onclick="openTeamModal()">
+                <div class="action-icon"><i class="fa-solid fa-info"></i></div>
+                <div class="action-label">Tentang Low Coffe & Tim</div>
+                <i class="fa-solid fa-chevron-right action-arrow"></i>
+              </div>
+              <div class="action-item text-danger" onclick="handleLogout()">
+                <div class="action-icon text-danger"><i class="fa-solid fa-right-from-bracket"></i></div>
+                <div class="action-label text-danger">Keluar (Logout)</div>
+                <i class="fa-solid fa-chevron-right action-arrow"></i>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 7: ADMIN DASHBOARD OVERVIEW (SCREEN 6) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-admin-dashboard">
+          <div class="admin-top-header">
+            <div>
+              <span class="admin-badge">PANEL OWNER</span>
+              <h2 class="admin-title">Espresso Admin</h2>
+            </div>
+            <div class="admin-header-actions">
+              <button class="bell-btn" onclick="showToast('Semua notifikasi pesanan telah diperbarui')">
+                <i class="fa-regular fa-bell"></i>
+                <span class="bell-dot"></span>
+              </button>
+              <img src="/assets/images/avatar-admin.jpg" class="admin-avatar-small" alt="Admin">
+            </div>
+          </div>
+
+          <div class="admin-page-content">
+            <div class="overview-header">
+              <h3>Overview</h3>
+              <span class="date-chip" id="adminTodayDate">19 Okt 2026</span>
+            </div>
+
+            <!-- KPI Cards Grid (Matches Prototype Screen 6) -->
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <div class="kpi-icon-wrap bg-soft-orange">
+                  <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-title">Pesanan Hari Ini</span>
+                  <h3 class="kpi-value" id="kpiOrdersCount">24</h3>
+                  <span class="kpi-change text-success"><i class="fa-solid fa-arrow-up"></i> +15% vs kemarin</span>
+                </div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-icon-wrap bg-soft-brown">
+                  <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-title">Total Pendapatan</span>
+                  <h3 class="kpi-value" id="kpiRevenue">Rp 1.548.000</h3>
+                  <span class="kpi-change text-success"><i class="fa-solid fa-arrow-up"></i> +8% vs kemarin</span>
+                </div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-icon-wrap bg-soft-cream">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+                <div class="kpi-info">
+                  <span class="kpi-title">Pelanggan Aktif</span>
+                  <h3 class="kpi-value" id="kpiCustomers">12</h3>
+                  <span class="kpi-change text-muted">Kedai Ramai</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section: Recent Orders Incoming -->
+            <div class="admin-section-header mt-4">
+              <h4>Pesanan Masuk Terbaru</h4>
+              <a href="javascript:void(0)" onclick="navigateTo('/admin/orders')">Lihat Semua</a>
+            </div>
+
+            <div class="recent-orders-list" id="dashboardRecentOrders">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Section: Weekly Performance Summary -->
+            <div class="admin-section-header mt-4">
+              <h4>Ringkasan Mingguan</h4>
+              <a href="javascript:void(0)" onclick="navigateTo('/admin/reports')">Buka Laporan</a>
+            </div>
+
+            <div class="summary-mini-card">
+              <div class="mini-chart-desc">
+                <div class="metric-block">
+                  <span class="lbl">Total Penjualan Bulan Ini</span>
+                  <h4 id="dashMonthRevenue">Rp 12.450.000</h4>
+                </div>
+                <div class="metric-block">
+                  <span class="lbl">Rata-rata Order</span>
+                  <h4 id="dashAvgOrder">Rp 48.500</h4>
+                </div>
+              </div>
+              <div class="canvas-wrap mini-chart">
+                <canvas id="miniTrendChart" height="120"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 8: ADMIN ORDERS MANAGEMENT (SCREEN 7) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-admin-orders">
+          <div class="admin-top-header">
+            <div>
+              <span class="admin-badge">MANAJEMEN PESANAN</span>
+              <h2 class="admin-title">Daftar Pesanan</h2>
+            </div>
+            <button class="refresh-circle-btn" onclick="loadAdminOrders()" title="Segarkan Pesanan">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+
+          <div class="admin-page-content">
+            <!-- Order Filter Tabs -->
+            <div class="order-filter-pills" id="adminOrderFilters">
+              <button class="filter-pill active" onclick="filterAdminOrders('Semua', this)">Semua</button>
+              <button class="filter-pill" onclick="filterAdminOrders('Baru', this)">Baru <span class="badge-count" id="countBaruBadge">0</span></button>
+              <button class="filter-pill" onclick="filterAdminOrders('Diproses', this)">Diproses</button>
+              <button class="filter-pill" onclick="filterAdminOrders('Selesai', this)">Selesai</button>
+              <button class="filter-pill" onclick="filterAdminOrders('Dibatalkan', this)">Dibatalkan</button>
+            </div>
+
+            <!-- Orders List -->
+            <div class="admin-orders-list" id="adminOrdersContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 9: ADMIN PRODUCT / MENU CRUD (SCREEN 9) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-admin-menu">
+          <div class="admin-top-header">
+            <div>
+              <span class="admin-badge">KATALOG PRODUK</span>
+              <h2 class="admin-title">Product Management</h2>
+            </div>
+            <button class="btn-primary btn-sm" onclick="openAddMenuModal()">
+              <i class="fa-solid fa-plus"></i> Tambah Menu
+            </button>
+          </div>
+
+          <div class="admin-page-content">
+            <p class="admin-subdesc">Atur ketersediaan menu, ubah harga, atau tambahkan varian kopi dan makanan baru.</p>
+
+            <!-- Category Filter for Admin -->
+            <div class="category-pills admin-cat-pills" id="adminCatPills">
+              <button class="cat-pill active" onclick="filterAdminMenu('all', this)">Semua</button>
+              <button class="cat-pill" onclick="filterAdminMenu('kopi', this)">Kopi</button>
+              <button class="cat-pill" onclick="filterAdminMenu('non-kopi', this)">Non-Kopi</button>
+              <button class="cat-pill" onclick="filterAdminMenu('makanan', this)">Makanan</button>
+              <button class="cat-pill" onclick="filterAdminMenu('snack', this)">Snack</button>
+            </div>
+
+            <!-- Admin Menu List -->
+            <div class="admin-product-grid" id="adminMenuContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 10: ADMIN SALES REPORTS (SCREEN 8) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-admin-reports">
+          <div class="admin-top-header">
+            <div>
+              <span class="admin-badge">LAPORAN BISNIS</span>
+              <h2 class="admin-title">Sales Reports</h2>
+            </div>
+            <button class="btn-secondary btn-sm" onclick="printReport()">
+              <i class="fa-solid fa-print"></i> Cetak
+            </button>
+          </div>
+
+          <div class="admin-page-content">
+            <!-- Date Filter Chip -->
+            <div class="date-range-bar">
+              <i class="fa-regular fa-calendar"></i>
+              <span>Rentang: <strong>01 Okt 2026 - 19 Okt 2026</strong></span>
+            </div>
+
+            <!-- Sales Summary Cards -->
+            <div class="report-kpi-row">
+              <div class="report-box">
+                <span class="lbl">Total Penjualan</span>
+                <h3 class="val" id="repTotalSales">Rp 12.450.000</h3>
+                <span class="growth text-success"><i class="fa-solid fa-arrow-trend-up"></i> +12% dari bulan lalu</span>
+              </div>
+              <div class="report-box">
+                <span class="lbl">Rata-rata Order</span>
+                <h3 class="val" id="repAvgOrder">Rp 48.500</h3>
+                <span class="growth text-muted">Konsisten Tinggi</span>
+              </div>
+            </div>
+
+            <!-- Trend Chart Card -->
+            <div class="report-chart-card">
+              <div class="chart-header">
+                <h4>Performa Trend Penjualan</h4>
+                <span class="tag-live">Oktober 2026</span>
+              </div>
+              <div class="canvas-wrap main-chart">
+                <canvas id="salesTrendChart" height="220"></canvas>
+              </div>
+            </div>
+
+            <!-- Top Selling Menu Ranking -->
+            <div class="admin-section-header mt-4">
+              <h4>Menu Terlaris (Top Selling)</h4>
+            </div>
+
+            <div class="top-selling-card">
+              <div class="ranking-list" id="reportTopSellingList">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 11: ADMIN SETTINGS & TEAM (SCREEN 10) -->
+        <!-- ============================================== -->
+        <section class="page-view" id="view-admin-settings">
+          <div class="admin-top-header">
+            <div>
+              <span class="admin-badge">SISTEM & TOKO</span>
+              <h2 class="admin-title">Pengaturan Kedai</h2>
+            </div>
+          </div>
+
+          <div class="admin-page-content">
+            <!-- Owner Profile Card (Matches Prototype Screen 10) -->
+            <div class="admin-owner-card">
+              <img src="/assets/images/avatar-admin.jpg" class="owner-avatar" alt="Syahri">
+              <div class="owner-details">
+                <h3 id="setOwnerName">Syahri Ramadhan</h3>
+                <p class="role-badge" id="setOwnerRole">Manager & Owner Low Coffe</p>
+                <p class="owner-nim" id="setOwnerNim">NIM: 240705090</p>
+              </div>
+            </div>
+
+            <!-- Shop Settings Form -->
+            <div class="settings-form-card">
+              <h4 class="card-section-title"><i class="fa-solid fa-store"></i> Status Operasional Kedai</h4>
+              
+              <div class="setting-toggle-row">
+                <div>
+                  <span class="setting-title">Status Toko Buka</span>
+                  <p class="setting-desc">Izinkan pelanggan membuat pesanan baru sekarang</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="setStoreOpen" checked onchange="handleStoreStatusToggle(this.checked)">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="setting-toggle-row">
+                <div>
+                  <span class="setting-title">Notifikasi Suara Pesanan Baru</span>
+                  <p class="setting-desc">Mainkan nada saat ada pesanan masuk</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="setSoundNotify" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="input-group mt-3">
+                <label>Jam Operasional Kedai</label>
+                <div class="input-field">
+                  <i class="fa-regular fa-clock"></i>
+                  <input type="text" id="setOpenHours" value="08:00 - 22:00">
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>Alamat Kedai Kopi</label>
+                <div class="input-field">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input type="text" id="setAddress" value="Jl. Teuku Umar No. 45, Banda Aceh">
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>Jumlah Meja Tersedia</label>
+                <div class="input-field">
+                  <i class="fa-solid fa-chair"></i>
+                  <input type="number" id="setTablesCount" value="20" min="1" max="100">
+                </div>
+              </div>
+
+              <button class="btn-primary mt-3" onclick="saveShopSettings()">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+              </button>
+            </div>
+
+            <!-- Kelompok 5 Team Members (From Slide 1 & Slide 9) -->
+            <div class="team-credits-card mt-4">
+              <h4 class="card-section-title"><i class="fa-solid fa-graduation-cap"></i> Tim Pengembang (Kelompok 5)</h4>
+              <p class="team-sub">Konsep dan Pengembangan Aplikasi - Semester 5</p>
+              
+              <div class="team-list" id="adminTeamList">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Danger Zone: Reset Data -->
+            <div class="danger-zone-card mt-4">
+              <h4 class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> Setel Ulang Data</h4>
+              <p>Kembalikan data pesanan, menu, dan laporan ke setelan default awal presentasi.</p>
+              <button class="btn-danger btn-sm mt-2" onclick="confirmResetData()">
+                <i class="fa-solid fa-rotate-left"></i> Reset ke Data Awal
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /.phone-screen -->
+
+
+      <!-- ============================================== -->
+      <!-- BOTTOM NAVIGATION BARS (CUSTOMER & ADMIN) -->
+      <!-- ============================================== -->
+      
+      <!-- Customer Bottom Nav (Screens 11, 15, 16, 17) -->
+      <nav class="bottom-nav customer-nav" id="customerBottomNav">
+        <button class="nav-item active" data-target="/menu" onclick="navigateTo('/menu')">
+          <i class="fa-solid fa-mug-hot"></i>
+          <span>Menu</span>
+        </button>
+        <button class="nav-item" data-target="/favorit" onclick="navigateTo('/favorit')">
+          <i class="fa-solid fa-heart"></i>
+          <span>Favorit</span>
+        </button>
+        <button class="nav-item" data-target="/keranjang" onclick="navigateTo('/keranjang')">
+          <div class="nav-icon-badge-wrap">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="nav-badge" id="cartNavBadge" style="display:none">0</span>
+          </div>
+          <span>Keranjang</span>
+        </button>
+        <button class="nav-item" data-target="/akun" onclick="navigateTo('/akun')">
+          <i class="fa-solid fa-user"></i>
+          <span>Akun</span>
+        </button>
+      </nav>
+
+      <!-- Admin Bottom Nav (Screens 6, 7, 8, 9, 10) -->
+      <nav class="bottom-nav admin-nav" id="adminBottomNav" style="display:none">
+        <button class="nav-item active" data-target="/admin" onclick="navigateTo('/admin')">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Overview</span>
+        </button>
+        <button class="nav-item" data-target="/admin/orders" onclick="navigateTo('/admin/orders')">
+          <div class="nav-icon-badge-wrap">
+            <i class="fa-solid fa-receipt"></i>
+            <span class="nav-badge" id="adminOrdersNavBadge" style="display:none">0</span>
+          </div>
+          <span>Pesanan</span>
+        </button>
+        <button class="nav-item" data-target="/admin/reports" onclick="navigateTo('/admin/reports')">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Laporan</span>
+        </button>
+        <button class="nav-item" data-target="/admin/menu" onclick="navigateTo('/admin/menu')">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>Menu</span>
+        </button>
+        <button class="nav-item" data-target="/admin/settings" onclick="navigateTo('/admin/settings')">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Pengaturan</span>
+        </button>
+      </nav>
+
+    </div><!-- /.phone-frame-wrapper -->
+
+  </main>
+
+
+  <!-- ============================================== -->
+  <!-- MODALS -->
+  <!-- ============================================== -->
+
+  <!-- Modal 1: Product Customization (PPT Slide 2, 3, 4, 5) -->
+  <div class="modal-overlay" id="customizationModal" style="display:none">
+    <div class="modal-card bottom-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h3 id="modalProductName">Kustomisasi Pesanan Kopi</h3>
+        <button class="close-modal-btn" onclick="closeCustomizationModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="product-preview-mini">
+          <img src="/assets/images/latte.jpg" id="modalProductImg" alt="Preview">
+          <div>
+            <h4 id="modalProductTitle">Caffe Latte</h4>
+            <p id="modalProductDesc">Deskripsi racikan kopi</p>
+            <span class="modal-base-price" id="modalProductBasePrice">Rp 22.000</span>
+          </div>
+        </div>
+
+        <form id="customizationForm">
+          <!-- Suhu: Panas / Dingin -->
+          <div class="custom-group" id="groupSuhu">
+            <label class="group-title">Suhu Minuman</label>
+            <div class="option-chips">
+              <label class="chip-opt">
+                <input type="radio" name="optSuhu" value="Dingin" checked>
+                <span>Dingin (Iced)</span>
+              </label>
+              <label class="chip-opt">
+                <input type="radio" name="optSuhu" value="Panas">
+                <span>Panas (Hot)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Pilihan Biji Kopi -->
+          <div class="custom-group" id="groupBiji">
+            <label class="group-title">Pilihan Biji Kopi</label>
+            <div class="option-chips">
+              <label class="chip-opt">
+                <input type="radio" name="optBiji" value="Arabika Gayo" checked>
+                <span>Arabika Gayo (Harum & Halus)</span>
+              </label>
+              <label class="chip-opt">
+                <input type="radio" name="optBiji" value="Robusta Aceh">
+                <span>Robusta Aceh (Bold & Kuat)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Pilihan Susu -->
+          <div class="custom-group" id="groupSusu">
+            <label class="group-title">Jenis Susu</label>
+            <div class="option-chips">
+              <label class="chip-opt">
+                <input type="radio" name="optSusu" value="Fresh Milk" checked onchange="updateCustomPrice()">
+                <span>Fresh Milk (Standar)</span>
+              </label>
+              <label class="chip-opt">
+                <input type="radio" name="optSusu" value="Oat Milk" data-extra="5000" onchange="updateCustomPrice()">
+                <span>Oat Milk (+Rp 5.000)</span>
+              </label>
+              <label class="chip-opt">
+                <input type="radio" name="optSusu" value="Soy Milk" data-extra="4000" onchange="updateCustomPrice()">
+                <span>Soy Milk (+Rp 4.000)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Ekstra Espresso Shot -->
+          <div class="custom-group" id="groupShot">
+            <label class="group-title">Ekstra Espresso Shot</label>
+            <div class="option-chips">
+              <label class="chip-opt">
+                <input type="radio" name="optShot" value="None" checked onchange="updateCustomPrice()">
+                <span>Normal Shot</span>
+              </label>
+              <label class="chip-opt">
+                <input type="radio" name="optShot" value="Extra" data-extra="6000" onchange="updateCustomPrice()">
+                <span>+1 Extra Shot (+Rp 6.000)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tingkat Gula -->
+          <div class="custom-group" id="groupGula">
+            <label class="group-title">Tingkat Kemanisan</label>
+            <div class="option-chips">
+              <label class="chip-opt">
+                <input type="radio" name="optGula" value="Normal" checked>
+                <span>Normal Sweet</span>
+              </label>
+              <label class="chip-opt">
+                <input type="radio" name="optGula" value="Less Sugar">
+                <span>Less Sugar (50%)</span>
+              </label>
+              <label class="chip-opt">
+                <input type="radio" name="optGula" value="No Sugar">
+                <span>No Sugar (0%)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Catatan Tambahan -->
+          <div class="custom-group">
+            <label class="group-title">Catatan Tambahan untuk Barista / Dapur</label>
+            <input type="text" id="modalCustomNotes" class="custom-input-text" placeholder="Contoh: Pisahkan saus, es batu sedikit...">
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <div class="qty-control">
+          <button type="button" class="btn-qty" onclick="changeModalQty(-1)"><i class="fa-solid fa-minus"></i></button>
+          <span class="qty-val" id="modalQtyVal">1</span>
+          <button type="button" class="btn-qty" onclick="changeModalQty(1)"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <button class="btn-primary flex-1" onclick="confirmAddToCart()">
+          Tambah ke Keranjang • <span id="modalFinalPrice">Rp 22.000</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal 2: Order Placed Success Modal -->
+  <div class="modal-overlay" id="orderSuccessModal" style="display:none">
+    <div class="modal-card center-card">
+      <div class="success-icon-wrap">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h3>Pesanan Berhasil Dibuat!</h3>
+      <p class="order-success-msg">Nomor Pesanan: <strong id="successOrderNumber">#LC-1025</strong></p>
+      
+      <div class="order-receipt-summary" id="receiptSummaryBox">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="modal-actions-col">
+        <button class="btn-primary" onclick="viewMyOrdersAfterCheckout()">
+          <i class="fa-solid fa-receipt"></i> Pantau Pesanan Saya
+        </button>
+        <button class="btn-secondary" onclick="closeOrderSuccessModal()">
+          Lanjut Pesan Menu Lain
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal 3: Admin Add/Edit Menu Modal -->
+  <div class="modal-overlay" id="adminMenuModal" style="display:none">
+    <div class="modal-card bottom-sheet">
+      <div class="modal-header">
+        <h3 id="adminMenuModalTitle">Tambah Menu Baru</h3>
+        <button class="close-modal-btn" onclick="closeAdminMenuModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="adminMenuForm" onsubmit="handleAdminSaveMenu(event)">
+          <input type="hidden" id="editMenuId">
+          
+          <div class="input-group">
+            <label>Nama Menu</label>
+            <input type="text" id="adminMenuName" class="custom-input-text" required placeholder="Contoh: Kopi Sanger Espresso">
+          </div>
+
+          <div class="input-row">
+            <div class="input-group">
+              <label>Kategori</label>
+              <select id="adminMenuCategory" class="custom-select" required>
+                <option value="kopi">Kopi</option>
+                <option value="non-kopi">Non-Kopi</option>
+                <option value="makanan">Makanan</option>
+                <option value="snack">Snack</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Harga (Rp)</label>
+              <input type="number" id="adminMenuPrice" class="custom-input-text" required placeholder="22000" min="1000">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Deskripsi Menu</label>
+            <textarea id="adminMenuDesc" class="custom-textarea" rows="2" placeholder="Jelaskan cita rasa racikan menu..."></textarea>
+          </div>
+
+          <div class="input-group">
+            <label>URL Gambar Menu</label>
+            <input type="text" id="adminMenuImage" class="custom-input-text" placeholder="/assets/images/latte.jpg">
+          </div>
+
+          <div class="setting-toggle-row mt-2">
+            <div>
+              <span class="setting-title">Status Stok Tersedia</span>
+              <p class="setting-desc">Aktifkan agar dapat dipesan pelanggan</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="adminMenuStock" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="modal-footer mt-4">
+            <button type="button" class="btn-secondary" onclick="closeAdminMenuModal()">Batal</button>
+            <button type="submit" class="btn-primary">Simpan Menu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal 4: Edit Profile Modal -->
+  <div class="modal-overlay" id="editProfileModal" style="display:none">
+    <div class="modal-card bottom-sheet">
+      <div class="modal-header">
+        <h3>Ubah Profil Akun</h3>
+        <button class="close-modal-btn" onclick="closeProfileEditModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="editProfileForm" onsubmit="handleSaveProfile(event)">
+          <div class="input-group">
+            <label>Nama Lengkap</label>
+            <input type="text" id="editProfName" class="custom-input-text" required>
+          </div>
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="editProfEmail" class="custom-input-text" required>
+          </div>
+          <div class="input-group">
+            <label>Nomor Telepon</label>
+            <input type="text" id="editProfPhone" class="custom-input-text" required>
+          </div>
+          <div class="modal-footer mt-4">
+            <button type="button" class="btn-secondary" onclick="closeProfileEditModal()">Batal</button>
+            <button type="submit" class="btn-primary">Simpan Profil</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal 5: Kelompok 5 Team Credits Modal -->
+  <div class="modal-overlay" id="teamModal" style="display:none">
+    <div class="modal-card center-card team-modal-content">
+      <div class="modal-header">
+        <h3>Kelompok 5 - Low Coffe</h3>
+        <button class="close-modal-btn" onclick="closeTeamModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body text-left">
+        <p class="team-sub">Mata Kuliah: <strong>Konsep dan Pengembangan Aplikasi</strong></p>
+        <p class="team-sub">Arsitektur: <strong>Monolitik (HTML5, CSS3, JS, Node.js Express, MySQL)</strong></p>
+        <hr class="modal-hr">
+        <div class="team-grid">
+          <div class="team-member-item">
+            <span class="t-nim">240705049</span>
+            <strong>Annisa Sri Mentari</strong>
+            <span class="t-task">Design System, Onboarding & Autentikasi</span>
+          </div>
+          <div class="team-member-item">
+            <span class="t-nim">240705090</span>
+            <strong>Syahri Ramadhan</strong>
+            <span class="t-task">Daftar Menu, Filter & Favorit (Owner)</span>
+          </div>
+          <div class="team-member-item">
+            <span class="t-nim">240705103</span>
+            <strong>Putroe Balqis</strong>
+            <span class="t-task">Keranjang, Profil Akun & Bottom Nav</span>
+          </div>
+          <div class="team-member-item">
+            <span class="t-nim">240705114</span>
+            <strong>Latifah Annum HSB</strong>
+            <span class="t-task">Dashboard Admin & Manajemen Pesanan</span>
+          </div>
+          <div class="team-member-item">
+            <span class="t-nim">240705128</span>
+            <strong>Kaisar Nahara Akbar</strong>
+            <span class="t-task">Laporan Penjualan & Produk Management</span>
+          </div>
+          <div class="team-member-item">
+            <span class="t-nim">240705166</span>
+            <strong>Maulana Raju</strong>
+            <span class="t-task">Pengaturan & Pengujian Responsif HP/Laptop</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary w-100" onclick="closeTeamModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/onboarding.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/customer.js"></script>
+  <script src="/js/admin.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
